@@ -21,15 +21,18 @@ int main()
                 window.close();
             }
 
-           
-            if (event.type == sf::Event::KeyPressed && !game.GameOver()) {
+           //Space bar press
+            if (event.type == sf::Event::KeyPressed && !game.GameOver() && game.HasStarted()) {
                 if (event.key.code == sf::Keyboard::Space) {
-                    game.SetToInteracted();
+
+                    if (!game.HasInteracted()) {
+                        game.SetToInteracted();
+                    }
                     game.PressSpaceKey();
                 }
             }
 
-            //check mouse clicks only if game is over or if a game hasn't been played yet (homescreen)
+            //mouse clicks
             if (game.GameOver() || !game.HasStarted()) {
                 if (event.type == sf::Event::MouseButtonPressed) {
 
@@ -54,3 +57,21 @@ int main()
     return 0;
 }
 
+//make it so you can change window size too!!!
+ //MAYBE MAKE IT SHOOT AUTOMATICALLY BASED ON TIME INSTEAD OF MANUALLY DOING IT, would get rid of the shooting error
+ //can make it so it shoots at certain intervals and can increase the intervals too.
+
+
+//TO DO:
+    //make it so enemies take damage //turn enemy red as you do (just replace it for a second with the same image but in red)
+    //make it so you can be hit by bullets (have some 2 second animation before game over screen)
+    //add the side walls
+    //adjust enemy speeds and stuff
+    //make it so it shoots automatically
+    //make it so can go to full screen
+    //add power ups
+    //make it so score is calculated and distance is calculated
+    //do functionality of stats button
+    //make it so aliens get stronger and harder to kill the more you go. 
+    //make sure when an enemy dies you delete all the bullets and stuff
+ 

@@ -1,6 +1,6 @@
 #include "Rocket.h"
 
-Rocket::Rocket() : FALL_VELOCITY(0,.2) { //y gets greater as you go down
+Rocket::Rocket() : FALL_VELOCITY(0,.2) { 
 	hasArmor = false;
 	wasHit = false;
 }

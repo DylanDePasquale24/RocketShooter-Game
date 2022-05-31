@@ -3,7 +3,7 @@
 
 
 
-class Rocket : public sf::Sprite   //the rocket itself is the image now (can call all its functions of a sprite now)
+class Rocket : public sf::Sprite   
 {
 	const sf::Vector2f FALL_VELOCITY;
 

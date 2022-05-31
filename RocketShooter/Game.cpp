@@ -4,74 +4,61 @@ Game::Game() : HEIGHT(675), WIDTH(1200) {
 	gameOver = false;
 	hasStarted = false;
 	hasInteracted = false;
+	hasEnemy = false;
 }
 
 void Game::Initialize() {
 	SetBackground();
 	InitializeRocket();
 	InitializeButtons();
+	EnemyManager::InitializeEnemyTypes();
 }
 void Game::Update() {
 
-	
-	CheckUpKeyPress();
-	MoveBullets();
-	
+	ControlRocket();   
+	//if you shoot it resets the noenemy timer so if you keep shooting no enemy appears
+
+	if (hasInteracted) {
+		
+		CheckIfRocketKilled();
+		//also in this function check if was shot by the alien too (pass in enemy bullet vector?)
+
+		friendlyBullets.UpdatePositions();
+
+
+		UpdateEnemy();
+
+		//check if rocket has been shot or if alien has been shot
+	}
 }
 void Game::Reset() {
 
 	gameOver = false;
 	hasStarted = false;
 	hasInteracted = false;
+	hasEnemy = false;
 	rocket.setPosition(75, HEIGHT / 2);
 
-	bullets.resize(0); 
+	friendlyBullets.Reset(); 
 }
 void Game::Draw(sf::RenderWindow& window) {
 
-	if (!hasStarted) {  //HOME SCREEN
-
-		sf::Sprite homeScreen;
-		homeScreen.setTexture(TextureManager::GetTexture("homescreen"));
-		window.draw(homeScreen);
-
-		window.draw(buttons["start"]);
-		window.draw(buttons["stats"]);
+	if (!hasStarted) { 
+		DrawHomeScreen(window);
 	}
-	else if (gameOver) {  //GAME OVER SCREEN
-
-		sf::Sprite gameOverScreen;
-		gameOverScreen.setTexture(TextureManager::GetTexture("gameoverscreen"));
-		window.draw(gameOverScreen);
-
-		window.draw(buttons["continue"]);
-
+	else if (gameOver) {  
+		DrawGameOverScreen(window);
 	}
-	else {  //PLAY GAME
-
-		window.draw(background);
-		window.draw(rocket);  //can just draw the rocket object bc its a sprite
-		DrawBullets(window);
-
-		if (!hasInteracted) {
-			sf::Sprite instructions;
-			instructions.setTexture(TextureManager::GetTexture("instructions"));
-			instructions.setPosition(200, 200);
-			window.draw(instructions);
-		}
+	else {  
+		DrawGamePlay(window);
 	}
-
 }
 
 void Game::PressSpaceKey() {
-
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-
 	float startX = rocket.getLocalBounds().width / 2 + 75;
 	float startY = rocket.getPosition().y;
 
-	CreateBullet(sf::Vector2f(startX, startY));
-	//}
+	friendlyBullets.Shoot(sf::Vector2f(startX, startY));
 }
 void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 
@@ -92,6 +79,8 @@ void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 }
 void Game::SetToInteracted() {
 	hasInteracted = true;
+	Time::StartGameClock();
+	Time::StartNoEnemyClock();
 }
 
 bool Game::GameOver() {
@@ -100,7 +89,9 @@ bool Game::GameOver() {
 bool Game::HasStarted() {
 	return hasStarted;
 }
-
+bool Game::HasInteracted() {
+	return hasInteracted;
+}
 
 
 
@@ -132,68 +123,121 @@ void Game::InitializeButtons() {
 	}));
 }
 
-void Game::CheckUpKeyPress() {
+void Game::ControlRocket() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-
-		hasInteracted = true;
 
 		rocket.move(-rocket.GetFallVelocity());
 
-		if (rocket.getPosition().y < 0) {
-			gameOver = true;
+		//upon first movement
+		if (hasInteracted == false) {
+			SetToInteracted();
 		}
+
 	}
 	else if(hasInteracted) {
 
 		rocket.move(rocket.GetFallVelocity());
-
-		if (rocket.getPosition().y > HEIGHT) {
-			gameOver = true;
-		}
+	}
+}
+void Game::CheckIfRocketKilled() {
+	if (rocket.getPosition().y < 0 || rocket.getPosition().y > HEIGHT) {
+		gameOver = true;
+		Time::EndGameClock();
 	}
 }
 
-void Game::CreateBullet(sf::Vector2f startPosition) {
+void Game::UpdateEnemy() {
 
-	//Go through vector and try to repurpose a bullet first
-	bool bulletReused = false;
-	for (int i = 0; i < bullets.size(); i++) {
+	if (!hasEnemy) {
 
-		//if there is an inactive one, use that 
-		if (!bullets[i].IsActive()) {
-			bullets[i].Initialize(startPosition);
-			bulletReused = true;
-			break;
+		if (Time::TimeWithNoEnemy() >= EnemyManager::GetEnemyInterval()) {
+			currentEnemy = EnemyManager::CreateEnemy();
+			hasEnemy = true;
 		}
 	}
+	else { //IF THERE IS AN ENEMY
 
-	//if a bullet wasn't repurposed, then you create a new one
-	if (!bulletReused) {
-		Bullet newBullet(startPosition);
-		bullets.push_back(newBullet);
+		currentEnemy.UpdatePosition();
+		currentEnemy.UpdateBullets();  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//shoot a bullet on time interval and move their positions
+		//this update bullets function is slowing the program down
+
+
+
+		//have to check if enemy was shot and then if it passes health kill it, etc.
+		//currentEnemy.CheckIfKilled(); or if shot and make rocket bullets stop if hit the alien
+
+
+		//do any enemy updates (make these belong to the enemy class)
+		//for was shot function pass in the bullets vector and see if any are in the same position and then if is (it counts as a shot)
+		//pass in as a reference so can set the bullet as inactive if was shot
+
+		//after a certain instance of time make it shoot  
+		//(Enemy should have its own vector of bullets in it and draw those bullets and shit)
+		//each shot add a bullet to the vector (have it be the same as the rocket bullets)
+
+		//update the current enemy (movement and shots)
+
+
+
+		//check if killed too (if killed) then 
+		//hasEnemy = false;
+		//start no enemy timer
 	}
+	
 }
-void Game::MoveBullets() {
-	for (int i = 0; i < bullets.size(); i++) {
 
-		Bullet& currentBullet = bullets[i];
+void Game::DrawHomeScreen(sf::RenderWindow& window){
+	sf::Sprite homeScreen;
+	homeScreen.setTexture(TextureManager::GetTexture("homescreen"));
+	window.draw(homeScreen);
 
-		if (currentBullet.IsActive()) {
-			currentBullet.move(currentBullet.GetMovementVelocity());
-		}
-
-		if (currentBullet.HitEdge()) {
-			currentBullet.SetActive(false);
-		}
-
-	}
+	window.draw(buttons["start"]);
+	window.draw(buttons["stats"]);
 }
-void Game::DrawBullets(sf::RenderWindow& window) {
-	for (int i = 0; i < bullets.size(); i++) {
+void Game::DrawGameOverScreen(sf::RenderWindow& window) {
+	sf::Sprite gameOverScreen;
+	gameOverScreen.setTexture(TextureManager::GetTexture("gameoverscreen"));
+	window.draw(gameOverScreen);
 
-		//only draw active bullets
-		if (bullets[i].IsActive()) {
-			window.draw(bullets[i]);
-		}
+	window.draw(buttons["continue"]);
+}
+void Game::DrawGamePlay(sf::RenderWindow& window) {
+	window.draw(background);
+	window.draw(rocket);  //can just draw the rocket object bc its a sprite
+	friendlyBullets.Draw(window);
+
+	//draw instructions
+	if (!hasInteracted) {
+		sf::Sprite instructions;
+		instructions.setTexture(TextureManager::GetTexture("instructions"));
+		instructions.setPosition(200, 200);
+		window.draw(instructions);
+	}
+
+	//draw the enemy
+	if (hasEnemy) {
+		window.draw(currentEnemy);   
+		currentEnemy.DrawBullets(window);
+		//maybe take out of if statement so the bullets can continue till edge of screen, even after enemy dies
 	}
 }

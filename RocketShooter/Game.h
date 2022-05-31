@@ -5,15 +5,15 @@
 #include <unordered_map>
 #include "TextureManager.h"
 #include "Rocket.h"
-#include "Bullet.h"
 #include "Button.h"
-
+#include "Time.h"
+#include "EnemyManager.h"
+#include "BulletManagers.h"
 using std::vector;
 using std::cout;
 using std::unordered_map;
 
 
-//This will Faciliate the main method 
 class Game
 {
 	sf::Sprite background;
@@ -21,14 +21,16 @@ class Game
 	const float WIDTH = 1200;
 
 	Rocket rocket;
-	vector<Bullet> bullets;
+	RocketBulletManager friendlyBullets;
 	unordered_map<string, Button> buttons;
+
+	Enemy currentEnemy;
 
 
 	bool gameOver;
 	bool hasStarted;
 	bool hasInteracted;
-
+	bool hasEnemy;
 
 public:
 
@@ -48,6 +50,7 @@ public:
 	//Accessors
 	bool GameOver();
 	bool HasStarted();
+	bool HasInteracted();
 	
 
 private:
@@ -55,10 +58,14 @@ private:
 	void InitializeRocket();
 	void InitializeButtons();
 
-	void CheckUpKeyPress();
+	void ControlRocket();
+	void CheckIfRocketKilled();
 
-	void CreateBullet(sf::Vector2f startPosition);
-	void MoveBullets();
-	void DrawBullets(sf::RenderWindow& window);
+
+	void UpdateEnemy();
+
+	void DrawHomeScreen(sf::RenderWindow& window);
+	void DrawGameOverScreen(sf::RenderWindow& window);
+	void DrawGamePlay(sf::RenderWindow& window);
 };
 
