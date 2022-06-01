@@ -5,6 +5,7 @@
  Timer Time::gameEnd;
  Timer Time::noEnemyStart;
  Timer Time::noBulletStart;
+ Timer Time::wasHitStart;
 
 
 
@@ -36,5 +37,14 @@
  int Time::TimeWithNoBullet() {
 	 auto currentTime = high_resolution_clock::now();
 	 auto duration = duration_cast<seconds>(currentTime - noBulletStart);
+	 return duration.count();
+ }
+
+ void Time::StartWasHitClock() {
+	wasHitStart = high_resolution_clock::now();
+ }
+ int Time::TimeSinceHit() {
+	 auto currentTime = high_resolution_clock::now();
+	 auto duration = duration_cast<milliseconds>(currentTime - wasHitStart);
 	 return duration.count();
  }

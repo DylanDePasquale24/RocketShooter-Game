@@ -4,9 +4,13 @@ Enemy::Enemy() {
 	bullets.Initialize(sf::Vector2f(0, 0), "alienbullet");
 	totalHealth = 0;
 	timeBtwnShots = 5;
+	wasHit = false;
+	wasKilled = false;
+	type = "ufo";
 }
 Enemy::Enemy(string _type, int _totalHealth, float _speed, int _minTimeBtwnShots, int _maxTimeBtwnShots, sf::Vector2f bulletVelocity) {
 	setTexture(TextureManager::GetTexture(_type));
+	type = _type;
 
 	bullets.Initialize(bulletVelocity, _type + "bullet"); 
 
@@ -19,6 +23,8 @@ Enemy::Enemy(string _type, int _totalHealth, float _speed, int _minTimeBtwnShots
 	timeBtwnShots = 1;  //starts off as 1
 
 	currentHealth = 0;
+	wasHit = false;
+	wasKilled = false;
 }
 
 void Enemy::CreateInstance() {
@@ -33,6 +39,12 @@ void Enemy::CreateInstance() {
 void Enemy::IncrementHp() {
 	totalHealth += hpIncrement;
 }
+void Enemy::DecrementHpBy(int amt) {
+	currentHealth -= amt;
+}
+int Enemy::GetCurrentHealth() {
+	return currentHealth;
+}
 
 void Enemy::UpdatePosition() {
 
@@ -41,28 +53,55 @@ void Enemy::UpdatePosition() {
 		speed *= -1;  //reverse direction
 	}
 }
-void Enemy::UpdateBullets() {
-
+void Enemy::Shoot() {
 	if (!bulletClockStarted) {
 		Time::StartNoBulletClock();
 		bulletClockStarted = true;
 	}
 	else if (Time::TimeWithNoBullet() >= timeBtwnShots) {  //SHOOT
-		
+
 		int width = getGlobalBounds().width;
-		bullets.Shoot(sf::Vector2f(getPosition().x - width, getPosition().y));   
+		bullets.Shoot(sf::Vector2f(getPosition().x - width, getPosition().y));
 
 		//for first shot, it waits the max time and then after that, it randomizes each time
 		timeBtwnShots = Random::Int(minTimeBtwnShots, maxTimeBtwnShots);
 
 		bulletClockStarted = false;  //restarts bullet clock
 	}
-
+}
+void Enemy::UpdateBullets() {
 	bullets.UpdatePositions();
 }
 void Enemy::DrawBullets(sf::RenderWindow& window) {
 	bullets.Draw(window);
 }
+bool Enemy::HasActiveBullets() {
+	return bullets.HasActiveBullet();
+}
+
+bool Enemy::WasDamagedBy(RocketBulletManager rocketBullets) {
+
+	if (rocketBullets.HasBulletAt(getGlobalBounds())) {
+		return true;
+	}
+	return false;
+}
+bool Enemy::WasHit() {
+	return wasHit;
+}
+bool Enemy::WasKilled() {
+	return wasKilled;
+}
+void Enemy::SetWasHit(bool val) {
+	wasHit = val;
+}
+void Enemy::SetWasKilled(bool val) {
+	wasKilled = val;
+}
+string Enemy::GetType() {
+	return type;
+}
+
 
 
 

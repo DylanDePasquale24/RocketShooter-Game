@@ -13,6 +13,9 @@ using std::vector;
 
 class Enemy : public sf::Sprite
 {  
+	string type;
+	bool wasHit;
+	bool wasKilled;
 
 	int totalHealth;   
 	int currentHealth;
@@ -36,12 +39,21 @@ public:
 
 	void CreateInstance();
 	void IncrementHp();
+	void DecrementHpBy(int amt);
+	int GetCurrentHealth();
 
 	void UpdatePosition();
+	void Shoot();
 	void UpdateBullets();
 	void DrawBullets(sf::RenderWindow& window);
+	bool HasActiveBullets();
 
-	void CheckIfDamaged();
+	bool WasDamagedBy(RocketBulletManager rocketBullets);
+	bool WasHit();
+	bool WasKilled();
+	void SetWasHit(bool val);
+	void SetWasKilled(bool val);
+	string GetType();
 
 	
 

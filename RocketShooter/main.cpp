@@ -64,14 +64,19 @@ int main()
 
 //TO DO:
     //make it so enemies take damage //turn enemy red as you do (just replace it for a second with the same image but in red)
+    //add the side walls and be able to be killed by then
+    //add animation when your ship dies for a few seconds. 
     //make it so you can be hit by bullets (have some 2 second animation before game over screen)
-    //add the side walls
     //adjust enemy speeds and stuff
-    //make it so it shoots automatically
     //make it so can go to full screen
-    //add power ups
+    //add power ups (shield that can take a bullet),, but battleship destroys shield
+        //make it so you can increase number of bullets that get shot automaticaally
+        //or damage of bullets
+        // 
     //make it so score is calculated and distance is calculated
     //do functionality of stats button
     //make it so aliens get stronger and harder to kill the more you go. 
     //make sure when an enemy dies you delete all the bullets and stuff
+    //keep track of scores and do end screen
+    //possibly add some sounds
  

@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <iostream>
 #include <string>
 #include "Bullets.h"
-using std::vector;
-using std::string;
+using namespace std;
 
 class BulletManager {
 
@@ -19,7 +19,8 @@ public:
 
 	void UpdatePositions();
 	void Shoot(sf::Vector2f startPosition);
-
+	bool HasBulletAt(sf::FloatRect spriteArea);
+	bool HasActiveBullet();
 	void Draw(sf::RenderWindow& window);
 	void Reset();
 
@@ -32,6 +33,7 @@ protected:
 
 
 struct RocketBulletManager : public BulletManager {
+	int damage;
 	RocketBulletManager();
 
 private:

@@ -1,9 +1,7 @@
 #include "BulletManagers.h"
 
 /*Bullet Manager*/
-BulletManager::BulletManager() {
-	
-};
+BulletManager::BulletManager() {}
 BulletManager::~BulletManager() {}
 
 void BulletManager::UpdatePositions() {
@@ -26,6 +24,26 @@ void BulletManager::Shoot(sf::Vector2f startPosition) {
 	if (!BulletWasRepurposed(startPosition)) {
  		CreateBullet(startPosition);
 	}
+}
+bool BulletManager::HasBulletAt(sf::FloatRect spriteArea) {
+
+	for (unsigned int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->IsActive() && bullets[i]->getGlobalBounds().intersects(spriteArea)) {
+
+			bullets[i]->SetActive(false);  //unactivate bullet
+			return true;
+		}
+	}
+	return false;
+
+}
+bool BulletManager::HasActiveBullet() {
+	for (unsigned int i = 0; i < bullets.size(); i++) {
+		if (bullets[i]->IsActive()) {
+			return true;
+		}
+	}
+	return false;
 }
 void BulletManager::Draw(sf::RenderWindow& window) {
 	for (unsigned int i = 0; i < bullets.size(); i++) {
@@ -58,13 +76,15 @@ bool BulletManager::BulletWasRepurposed(sf::Vector2f startPosition) {
 
 
 /*Rocket Bullet Manager*/
-RocketBulletManager::RocketBulletManager() : BulletManager() {};
+RocketBulletManager::RocketBulletManager() : BulletManager() {
+	damage = 50;
+}
 void RocketBulletManager::CreateBullet(sf::Vector2f startPosition) {
 	bullets.push_back(new RocketBullet(startPosition));
 }
 
 /*Enemy Bullet Manager*/
-EnemyBulletManager::EnemyBulletManager() : BulletManager() {};
+EnemyBulletManager::EnemyBulletManager() : BulletManager() {}
 void EnemyBulletManager::Initialize(sf::Vector2f _velocity, string _bulletType) {
 	velocity = _velocity;
 	bulletType = _bulletType;

@@ -27,8 +27,6 @@ void Game::Update() {
 
 
 		UpdateEnemy();
-
-		//check if rocket has been shot or if alien has been shot
 	}
 }
 void Game::Reset() {
@@ -157,53 +155,39 @@ void Game::UpdateEnemy() {
 	}
 	else { //IF THERE IS AN ENEMY
 
-		currentEnemy.UpdatePosition();
-		currentEnemy.UpdateBullets();  
+		if (!currentEnemy.WasKilled()) {
 
+			currentEnemy.UpdatePosition();
+			currentEnemy.Shoot();
 
+			if (currentEnemy.WasDamagedBy(friendlyBullets)) {
+				Time::StartWasHitClock();
+				currentEnemy.SetWasHit(true);
+				currentEnemy.DecrementHpBy(friendlyBullets.damage);
 
+				if (currentEnemy.GetCurrentHealth() <= 0) {
+					currentEnemy.SetWasKilled(true);
+				}
+			}
 
+			if (currentEnemy.WasHit() && Time::TimeSinceHit() >= 75) {
+				currentEnemy.SetWasHit(false);
+				currentEnemy.setTexture(TextureManager::GetTexture(currentEnemy.GetType()));
+			}
+		}
+		else {
+			currentEnemy.setTexture(TextureManager::GetTexture("red" + currentEnemy.GetType()));
+			currentEnemy.move(-.1, .1); 
+			currentEnemy.rotate(.25);
+			
+			if (currentEnemy.getPosition().y >= 675 && !currentEnemy.HasActiveBullets()) {
+				hasEnemy = false;
+				Time::StartNoEnemyClock();
+			}
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//shoot a bullet on time interval and move their positions
-		//this update bullets function is slowing the program down
-
-
-
-		//have to check if enemy was shot and then if it passes health kill it, etc.
-		//currentEnemy.CheckIfKilled(); or if shot and make rocket bullets stop if hit the alien
-
-
-		//do any enemy updates (make these belong to the enemy class)
-		//for was shot function pass in the bullets vector and see if any are in the same position and then if is (it counts as a shot)
-		//pass in as a reference so can set the bullet as inactive if was shot
-
-		//after a certain instance of time make it shoot  
-		//(Enemy should have its own vector of bullets in it and draw those bullets and shit)
-		//each shot add a bullet to the vector (have it be the same as the rocket bullets)
-
-		//update the current enemy (movement and shots)
-
-
-
-		//check if killed too (if killed) then 
-		//hasEnemy = false;
-		//start no enemy timer
+		currentEnemy.UpdateBullets(); 
 	}
-	
 }
 
 void Game::DrawHomeScreen(sf::RenderWindow& window){
@@ -236,8 +220,12 @@ void Game::DrawGamePlay(sf::RenderWindow& window) {
 
 	//draw the enemy
 	if (hasEnemy) {
-		window.draw(currentEnemy);   
+
 		currentEnemy.DrawBullets(window);
-		//maybe take out of if statement so the bullets can continue till edge of screen, even after enemy dies
+		if (currentEnemy.WasHit()) {
+			currentEnemy.setTexture(TextureManager::GetTexture("red" + currentEnemy.GetType()));
+		}
+
+		window.draw(currentEnemy);
 	}
 }

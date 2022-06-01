@@ -10,6 +10,7 @@ class Time
 	static Timer gameEnd;
 	static Timer noEnemyStart;  
 	static Timer noBulletStart;
+	static Timer wasHitStart;
 
 public:
 	
@@ -22,6 +23,9 @@ public:
 
 	static void StartNoBulletClock();
 	static int TimeWithNoBullet();
+
+	static void StartWasHitClock();
+	static int TimeSinceHit();
 
 };
 
