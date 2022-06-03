@@ -3,6 +3,9 @@
 vector<Enemy> EnemyManager::enemies;
 
 void EnemyManager::InitializeEnemyTypes() {
+
+	//type,health, Yspeed, mintimeBtwn shots, max time btwn shots, bullet velocity
+
 	Enemy alien("alien", 50, .1f, 1, 5, sf::Vector2f(-.1,0));
 	enemies.push_back(alien);
 
