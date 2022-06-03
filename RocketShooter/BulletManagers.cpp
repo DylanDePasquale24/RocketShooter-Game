@@ -83,8 +83,14 @@ void RocketBulletManager::CreateBullet(sf::Vector2f startPosition) {
 	bullets.push_back(new RocketBullet(startPosition));
 }
 
+
 /*Enemy Bullet Manager*/
 EnemyBulletManager::EnemyBulletManager() : BulletManager() {}
+EnemyBulletManager::~EnemyBulletManager() {
+	for (int i = 0; i < bullets.size(); i++) {
+		delete bullets[i];
+	}
+}
 void EnemyBulletManager::Initialize(sf::Vector2f _velocity, string _bulletType) {
 	velocity = _velocity;
 	bulletType = _bulletType;

@@ -63,20 +63,20 @@ int main()
 
 
 //TO DO:
-    //make it so enemies take damage //turn enemy red as you do (just replace it for a second with the same image but in red)
-    //add the side walls and be able to be killed by then
+   
+    //have distance show up in top left and have it appear on gameover screen (instead of "score" on gameover screen, make it the number of enemies killed
+    //make it so can go to full screen
+    //make it so bullets shoot automatically (just very infrequently so you still have to try to aim) (and space or mouse click to go up)
+    //Fix up speed of rocket falling. Make it slow at first and then increase in speed, not just linear. Kinda make it like flappy bird
+    //make it so rocket can be killed by enemy bullets and all asteroids
+        //do an animation for rocket dying(turn red for one second)  **OPTIONAL**
+
+    // check for memory leaks and see cpu usage. Try to make performance adjustments. 
+    //need to add a bunch of stuff to the reset (like timebtwn Asteroids and enemy bullets, etc.
+
+
+
+//allow rocket to be killed last because you want to figure out game balancing before you can be killed
+    //add the side walls and be able to be killed by them
     //add animation when your ship dies for a few seconds. 
     //make it so you can be hit by bullets (have some 2 second animation before game over screen)
-    //adjust enemy speeds and stuff
-    //make it so can go to full screen
-    //add power ups (shield that can take a bullet),, but battleship destroys shield
-        //make it so you can increase number of bullets that get shot automaticaally
-        //or damage of bullets
-        // 
-    //make it so score is calculated and distance is calculated
-    //do functionality of stats button
-    //make it so aliens get stronger and harder to kill the more you go. 
-    //make sure when an enemy dies you delete all the bullets and stuff
-    //keep track of scores and do end screen
-    //possibly add some sounds
- 

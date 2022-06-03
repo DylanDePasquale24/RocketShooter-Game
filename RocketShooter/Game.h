@@ -9,6 +9,8 @@
 #include "Time.h"
 #include "EnemyManager.h"
 #include "BulletManagers.h"
+#include "Asteroids.h"
+#include "Wave.h"
 using std::vector;
 using std::cout;
 using std::unordered_map;
@@ -23,14 +25,18 @@ class Game
 	Rocket rocket;
 	RocketBulletManager friendlyBullets;
 	unordered_map<string, Button> buttons;
-
 	Enemy currentEnemy;
-
+	Asteroids asteroids;
+	Wave wave;
 
 	bool gameOver;
 	bool hasStarted;
 	bool hasInteracted;
 	bool hasEnemy;
+
+	int timeForNextAsteroid;
+	int enemyInterval;
+
 
 public:
 
@@ -61,8 +67,8 @@ private:
 	void ControlRocket();
 	void CheckIfRocketKilled();
 
-
 	void UpdateEnemy();
+	void UpdateAsteroids();
 
 	void DrawHomeScreen(sf::RenderWindow& window);
 	void DrawGameOverScreen(sf::RenderWindow& window);

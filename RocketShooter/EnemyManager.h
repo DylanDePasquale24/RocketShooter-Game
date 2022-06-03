@@ -9,13 +9,13 @@ using std::vector;
 class EnemyManager 
 {
 	static vector<Enemy> enemies;
-	static const int ENEMY_INTERVAL = 2;  //seconds
+	static const int timeBeforeFirstEnemy = 6;
 
 public:
 
 	static void InitializeEnemyTypes();
 	static Enemy CreateEnemy(); 
 	static void IncrementHealths(); 
-	static int GetEnemyInterval();
+	static int GetTimeBeforeFirstEnemy();
 };
 

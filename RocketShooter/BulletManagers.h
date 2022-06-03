@@ -48,6 +48,7 @@ class EnemyBulletManager : public BulletManager {
 public:
 	EnemyBulletManager();
 	void Initialize(sf::Vector2f _velocity, string _bulletType);
+	~EnemyBulletManager();
 
 private:
 	void CreateBullet(sf::Vector2f startPosition);

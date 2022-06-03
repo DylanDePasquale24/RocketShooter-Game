@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="Asteroids.cpp" />
     <ClCompile Include="BulletManagers.cpp" />
     <ClCompile Include="Bullets.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -156,8 +158,11 @@
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="Asteroids.h" />
     <ClInclude Include="BulletManagers.h" />
     <ClInclude Include="Bullets.h" />
     <ClInclude Include="Button.h" />
@@ -168,6 +173,7 @@
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Wave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

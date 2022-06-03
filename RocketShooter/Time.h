@@ -8,9 +8,13 @@ class Time
 {
 	static Timer gameStart;
 	static Timer gameEnd;
+
+	static Timer waveStart;
+
 	static Timer noEnemyStart;  
 	static Timer noBulletStart;
 	static Timer wasHitStart;
+	static Timer noAsteroidStart;
 
 public:
 	
@@ -26,6 +30,12 @@ public:
 
 	static void StartWasHitClock();
 	static int TimeSinceHit();
+
+	static void StartNoAsteroidClock();
+	static int TimeWithNoAsteroid();
+
+	static void StartWaveClock();
+	static int TimeOfWave();
 
 };
 

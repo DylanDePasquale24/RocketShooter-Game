@@ -6,6 +6,8 @@
  Timer Time::noEnemyStart;
  Timer Time::noBulletStart;
  Timer Time::wasHitStart;
+ Timer Time::noAsteroidStart;
+ Timer Time::waveStart;
 
 
 
@@ -48,3 +50,22 @@
 	 auto duration = duration_cast<milliseconds>(currentTime - wasHitStart);
 	 return duration.count();
  }
+
+ void Time::StartNoAsteroidClock() {
+	 noAsteroidStart = high_resolution_clock::now();
+ }
+ int Time::TimeWithNoAsteroid(){
+	 auto currentTime = high_resolution_clock::now();
+	 auto duration = duration_cast<milliseconds>(currentTime - noAsteroidStart);
+	 return duration.count(); //milliseconds
+ }
+
+ void Time::StartWaveClock() {
+	 waveStart = high_resolution_clock::now();
+ }
+ int Time::TimeOfWave() {
+	 auto currentTime = high_resolution_clock::now();
+	 auto duration = duration_cast<seconds>(currentTime - waveStart);
+	 return duration.count();
+ }
+

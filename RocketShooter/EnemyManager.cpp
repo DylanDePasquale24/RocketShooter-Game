@@ -34,8 +34,8 @@ void EnemyManager::IncrementHealths() {
 		enemies[i].IncrementHp();
 	}
 }
-int EnemyManager::GetEnemyInterval() {
-	return ENEMY_INTERVAL;
+int EnemyManager::GetTimeBeforeFirstEnemy() {
+	return timeBeforeFirstEnemy;
 }
 
 
