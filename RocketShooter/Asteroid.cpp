@@ -1,5 +1,6 @@
 #include "Asteroid.h"
 
+Asteroid::Asteroid(){}
 Asteroid::Asteroid(int scaleOption) {
 
 	scale = CalculateScale(scaleOption);

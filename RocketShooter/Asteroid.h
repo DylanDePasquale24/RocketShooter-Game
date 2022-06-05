@@ -11,6 +11,7 @@ class Asteroid : public sf::Sprite
 	
 public:
 
+	Asteroid();
 	Asteroid(int scaleOption);
 	void Repurpose(int scaleOption);
 

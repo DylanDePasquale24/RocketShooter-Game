@@ -58,11 +58,19 @@ int main()
 }
 
 //make it so you can change window size too!!!
- //MAYBE MAKE IT SHOOT AUTOMATICALLY BASED ON TIME INSTEAD OF MANUALLY DOING IT, would get rid of the shooting error
+ //MAYBE MAKE IT SHOOT AUTOMATICALLY BASED ON TIME INSTEAD OF MANUALLY DOING IT
  //can make it so it shoots at certain intervals and can increase the intervals too.
 
 
 //TO DO:
+    //MAKE IT SO WAVES ALL HAPPEN FOR A CERTAIN TIME. theres a break after each wave for a bit. and you can only go onto the next wave until current enemy is killed
+    // meaning new wave time doesnt start either until enemy is killed
+
+//FOR SCORE, ADD UP ALL THE TIMES OF THE WAVES BEFORE HAND AND THE CURRENT TIME OR SOMETHING, DONT WANT THE BREAKS TO BE ACCOUNTED FOR. 
+
+   
+    
+    
    
     //have distance show up in top left and have it appear on gameover screen (instead of "score" on gameover screen, make it the number of enemies killed
     //make it so can go to full screen
@@ -80,3 +88,9 @@ int main()
     //add the side walls and be able to be killed by them
     //add animation when your ship dies for a few seconds. 
     //make it so you can be hit by bullets (have some 2 second animation before game over screen)
+
+
+
+
+
+//seperate all your inheritance classes into seperate files, instead of just one

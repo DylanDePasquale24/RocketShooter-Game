@@ -1,21 +1,35 @@
 #pragma once
 #include <vector>
-#include "Enemy.h"
+#include <iostream>
+#include "Enemys.h"
 #include "Random.h"
 #include "TextureManager.h"
-
+using std::cout;
 using std::vector;
 
 class EnemyManager 
 {
-	static vector<Enemy> enemies;
-	static const int timeBeforeFirstEnemy = 6;
+	vector<Enemy*> enemies;
+	const int timeBeforeFirstEnemy = 6;
+
+	const int shootFasterIntervalW3 = 3;  //wave 3
+	const int shootFasterIntervalW4 = 5;  //wave 4
+	const int shootFasterIntervalW5 = 7;  //wave 5
+
 
 public:
 
-	static void InitializeEnemyTypes();
-	static Enemy CreateEnemy(); 
-	static void IncrementHealths(); 
-	static int GetTimeBeforeFirstEnemy();
+	EnemyManager();
+	~EnemyManager();
+
+	void InitializeEnemyTypes();
+	Enemy* CreateEnemy(); 
+	void Reset(); 
+
+	void EnemiesShootFaster();
+	void IncreaseEnemyHealths();
+
+	int GetTimeBeforeFirstEnemy();
+	int GetShootFasterInterval(int wave);
 };
 

@@ -25,7 +25,8 @@ class Game
 	Rocket rocket;
 	RocketBulletManager friendlyBullets;
 	unordered_map<string, Button> buttons;
-	Enemy currentEnemy;
+	Enemy* currentEnemy;
+	EnemyManager enemyManager;
 	Asteroids asteroids;
 	Wave wave;
 
@@ -33,6 +34,8 @@ class Game
 	bool hasStarted;
 	bool hasInteracted;
 	bool hasEnemy;
+	bool pausedAsteroids;
+	bool startedWaveBreak;
 
 	int timeForNextAsteroid;
 	int enemyInterval;
@@ -68,7 +71,9 @@ private:
 	void CheckIfRocketKilled();
 
 	void UpdateEnemy();
+	void AdjustShotFrequency();
 	void UpdateAsteroids();
+	void IncrementWave();
 
 	void DrawHomeScreen(sf::RenderWindow& window);
 	void DrawGameOverScreen(sf::RenderWindow& window);

@@ -1,44 +1,65 @@
 #include "EnemyManager.h"
 
-vector<Enemy> EnemyManager::enemies;
-
-void EnemyManager::InitializeEnemyTypes() {
-
-	//type,health, Yspeed, mintimeBtwn shots, max time btwn shots, bullet velocity
-
-	Enemy alien("alien", 50, .1f, 1, 5, sf::Vector2f(-.1,0));
-	enemies.push_back(alien);
-
-	Enemy ufo("ufo", 100, .05f, 3, 7, sf::Vector2f(-.065, 0));
-	enemies.push_back(ufo);
-
-	Enemy battleShip("battleship", 150, .025f, 5, 9, sf::Vector2f(-.05, 0));
-	enemies.push_back(battleShip);
-
-	for (unsigned int i = 0; i < enemies.size(); i++) {
-		TextureManager::SetOriginToCenter(enemies[i]);
+EnemyManager::EnemyManager() {}
+EnemyManager::~EnemyManager() {
+	for (int i = 0; i < enemies.size(); i++) {
+		delete enemies[i];
 	}
 }
 
-Enemy EnemyManager::CreateEnemy() {
-	
+void EnemyManager::InitializeEnemyTypes() {
+
+	enemies.push_back(new Alien());
+	enemies.push_back(new UFO());
+	enemies.push_back(new BattleShip());
+
+	for (unsigned int i = 0; i < enemies.size(); i++) {
+		TextureManager::SetOriginToCenter(*enemies[i]);
+	}
+}
+Enemy* EnemyManager::CreateEnemy() {
 	
 	int randomNum = Random::Int(0, 2);
 
 	/*testing*/
-	//randomNum = 2;
+	randomNum = 1;
 
-	enemies[randomNum].CreateInstance();
+	enemies[randomNum]->Repurpose();
 	return enemies[randomNum];
 }
-void EnemyManager::IncrementHealths() {
-
+void EnemyManager::Reset() {
 	for (unsigned int i = 0; i < enemies.size(); i++) {
-		enemies[i].IncrementHp();
+		enemies[i]->Reset();
 	}
 }
+
+void EnemyManager::EnemiesShootFaster() {
+	for (unsigned int i = 0; i < enemies.size(); i++) {
+		enemies[i]->SetShootsFaster();
+	}
+}
+void EnemyManager::IncreaseEnemyHealths() {
+	for (unsigned int i = 0; i < enemies.size(); i++) {
+		enemies[i]->IncreaseHealth();
+	}
+}
+
 int EnemyManager::GetTimeBeforeFirstEnemy() {
 	return timeBeforeFirstEnemy;
+}
+int EnemyManager::GetShootFasterInterval(int wave) {
+	
+	if (wave == 3) {
+		return shootFasterIntervalW3;
+	}
+	else if (wave == 4) {
+		return shootFasterIntervalW4;
+	}
+	else if (wave == 5) {
+		shootFasterIntervalW5;
+	}
+
+	return 5;
 }
 
 

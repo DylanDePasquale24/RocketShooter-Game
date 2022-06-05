@@ -43,3 +43,6 @@ void Asteroids::Draw(sf::RenderWindow& window) {
 		}
 	}
 }
+void Asteroids::Reset() {
+	astroidVec.resize(0);
+}

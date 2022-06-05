@@ -10,8 +10,10 @@ class Time
 	static Timer gameEnd;
 
 	static Timer waveStart;
+	static Timer waveBreakStart;
 
 	static Timer noEnemyStart;  
+	static Timer shotFreqStart;
 	static Timer noBulletStart;
 	static Timer wasHitStart;
 	static Timer noAsteroidStart;
@@ -23,19 +25,25 @@ public:
 	static int GameRunTime();
 
 	static void StartNoEnemyClock();
-	static int TimeWithNoEnemy();
+	static int WithNoEnemy();
+
+	static void StartShotFreqClock();
+	static int SinceLastShotFreqChange();
 
 	static void StartNoBulletClock();
-	static int TimeWithNoBullet();
+	static int WithNoBullet();
 
 	static void StartWasHitClock();
-	static int TimeSinceHit();
+	static int SinceHit();
 
 	static void StartNoAsteroidClock();
-	static int TimeWithNoAsteroid();
+	static int WithNoAsteroid();
 
 	static void StartWaveClock();
-	static int TimeOfWave();
+	static int OfWave();
+
+	static void StartWaveBreakClock();
+	static int SinceWaveBreak();
 
 };
 

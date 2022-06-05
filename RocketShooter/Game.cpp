@@ -5,26 +5,55 @@ Game::Game() : HEIGHT(675), WIDTH(1200) {
 	hasStarted = false;
 	hasInteracted = false;
 	hasEnemy = false;
+	pausedAsteroids = false;
+	startedWaveBreak = false;
 	timeForNextAsteroid = 2000; //milliseconds
-	enemyInterval = EnemyManager::GetTimeBeforeFirstEnemy(); //seconds
+	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy(); //seconds
 }
 
 void Game::Initialize() {
 	SetBackground();
 	InitializeRocket();
 	InitializeButtons();
-	EnemyManager::InitializeEnemyTypes();
+	enemyManager.InitializeEnemyTypes();
 }
 void Game::Update() {
 
 	ControlRocket();   
 	if (hasInteracted) {
-		
+	
 		CheckIfRocketKilled();
 		friendlyBullets.UpdatePositions();
-		UpdateEnemy();
+
+
 		UpdateAsteroids();
+		UpdateEnemy();
+		
+		if (wave.HasEnded()) {
+
+			if (hasEnemy) {   //stop asteroids, but need to kill enemy first
+				pausedAsteroids = true;
+				
+			}
+			else if(!hasEnemy) {
+
+				if (!startedWaveBreak) {
+					Time::StartWaveBreakClock();
+					startedWaveBreak = true;
+					pausedAsteroids = true;
+				}
+				
+				//if break if over, you finally increment wave and unpause asteroids
+				if (Time::SinceWaveBreak() >= wave.GetWaveBreak()) {
+					IncrementWave();
+					pausedAsteroids = false;
+					startedWaveBreak = false;
+				}
+			}
+		}
 	}
+
+	//after the last enemy is killed, it spawns another one for some reason. 
 }
 void Game::Reset() {
 
@@ -32,11 +61,17 @@ void Game::Reset() {
 	hasStarted = false;
 	hasInteracted = false;
 	hasEnemy = false;
-	timeForNextAsteroid = 2000;  //need to change this!
-	enemyInterval = EnemyManager::GetTimeBeforeFirstEnemy();
+	startedWaveBreak = false;
+
+	timeForNextAsteroid = 2000;  
+	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy();
 	rocket.setPosition(75, HEIGHT / 2);
 
+
+	enemyManager.Reset();
+	wave.Reset();
 	friendlyBullets.Reset(); 
+	asteroids.Reset();
 }
 void Game::Draw(sf::RenderWindow& window) {
 
@@ -77,8 +112,8 @@ void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 void Game::SetToInteracted() {
 	hasInteracted = true;
 	Time::StartGameClock();
-	Time::StartNoEnemyClock();
 	Time::StartNoAsteroidClock();
+	Time::StartWaveClock();
 }
 
 bool Game::GameOver() {
@@ -146,67 +181,96 @@ void Game::CheckIfRocketKilled() {
 
 void Game::UpdateEnemy() {
 
-	if (wave.GetWave() > 1) {  //only do enemies past wave 1
+	
+	if (wave.GetWave() > 1 && !startedWaveBreak) {  //only do enemies past wave 1 and dont want to update enemies on wave break
 
 		if (!hasEnemy) {
 
-			if (Time::TimeWithNoEnemy() >= enemyInterval) {  //starting interval of 5 secs (for first enemy of evry wave)
-				currentEnemy = EnemyManager::CreateEnemy();
+			if (Time::WithNoEnemy() >= enemyInterval) {  //starting interval of 5 secs (for first enemy of evry wave)
+				currentEnemy = enemyManager.CreateEnemy();
 				enemyInterval = wave.GetEnemyInterval();     //changes to interval of the current wave
 				hasEnemy = true;
+				Time::StartShotFreqClock();
 			}
 		}
 		else { //IF THERE IS AN ENEMY
 
-			if (!currentEnemy.WasKilled()) {
+			if (!currentEnemy->WasKilled()) {
 
-				currentEnemy.UpdatePosition();
-				currentEnemy.Shoot();
+				currentEnemy->UpdatePosition();
 
-				if (currentEnemy.WasDamagedBy(friendlyBullets)) {
+				//if wave 3 and up(), you adjust shotFrequency, so enemy shoots faster over time
+				if (currentEnemy->GetShootsFaster()) {
+					AdjustShotFrequency();
+				}
+
+				currentEnemy->Shoot();
+
+				if (currentEnemy->WasDamagedBy(friendlyBullets)) {
 					Time::StartWasHitClock();
-					currentEnemy.SetWasHit(true);
-					currentEnemy.DecrementHpBy(friendlyBullets.damage);
+					currentEnemy->SetWasHit(true);
+					currentEnemy->DecrementHpBy(friendlyBullets.damage);
 
-					if (currentEnemy.GetCurrentHealth() <= 0) {
-						currentEnemy.SetWasKilled(true);
+					if (currentEnemy->GetCurrentHealth() <= 0) {
+						currentEnemy->SetWasKilled(true);
 					}
 				}
 
-				if (currentEnemy.WasHit() && Time::TimeSinceHit() >= 75) {
-					currentEnemy.SetWasHit(false);
-					currentEnemy.setTexture(TextureManager::GetTexture(currentEnemy.GetType()));
+				if (currentEnemy->WasHit() && Time::SinceHit() >= 75) {
+					currentEnemy->SetWasHit(false);
+					currentEnemy->setTexture(TextureManager::GetTexture(currentEnemy->GetType()));
 				}
 			}
 			else {
-				currentEnemy.setTexture(TextureManager::GetTexture("red" + currentEnemy.GetType()));
-				currentEnemy.move(-.1, .1);
-				currentEnemy.rotate(.25);
+				currentEnemy->setTexture(TextureManager::GetTexture("red" + currentEnemy->GetType()));
+				currentEnemy->move(-.1, .1);
+				currentEnemy->rotate(.25);
 
-				if (currentEnemy.getPosition().y >= 675 && !currentEnemy.HasActiveBullets()) {
+				if (currentEnemy->getPosition().y >= 675 && !currentEnemy->HasActiveBullets()) {
 					hasEnemy = false;
 					Time::StartNoEnemyClock();
 				}
 			}
 
-			currentEnemy.UpdateBullets();
+			currentEnemy->UpdateBullets();
 		}
 	}
+}
+void Game::AdjustShotFrequency() {
 	
+	if (Time::SinceLastShotFreqChange() >= enemyManager.GetShootFasterInterval(wave.GetWave())) {
+		currentEnemy->IncrementShotFrequency();
+		Time::StartShotFreqClock();  //bc it was just changed
+	}
 }
 void Game::UpdateAsteroids() {
 
-	
-	if (Time::TimeWithNoAsteroid() >= timeForNextAsteroid) {
-		asteroids.CreateAsteroid(wave);
-		Time::StartNoAsteroidClock();
+	if (!pausedAsteroids) {
+		if (Time::WithNoAsteroid() >= timeForNextAsteroid) {
+			asteroids.CreateAsteroid(wave);
+			Time::StartNoAsteroidClock();
 
-		//if you increment, then you set the time to be greater!
-		timeForNextAsteroid = Random::Int(500, wave.GetMaxAsteroidTime());
+			//if you increment, then you set the time to be greater!
+			timeForNextAsteroid = Random::Int(500, wave.GetMaxAsteroidTime());
+		}
 	}
-
 	asteroids.UpdatePositions();
+}
+void Game::IncrementWave() {
 
+	wave.Increment();
+	Time::StartWaveClock(); 
+	Time::StartNoEnemyClock();
+	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy();
+
+	if (wave.GetWave() == 3) {
+
+		enemyManager.EnemiesShootFaster(); 
+	}
+	else if (wave.GetWave() == 4 || wave.GetWave() == 5) {
+
+		enemyManager.IncreaseEnemyHealths();
+	}
 }
 
 void Game::DrawHomeScreen(sf::RenderWindow& window){
@@ -247,12 +311,12 @@ void Game::DrawGamePlay(sf::RenderWindow& window) {
 		//draw enemy
 		if (hasEnemy) {
 
-			currentEnemy.DrawBullets(window);
-			if (currentEnemy.WasHit()) {
-				currentEnemy.setTexture(TextureManager::GetTexture("red" + currentEnemy.GetType()));
+			currentEnemy->DrawBullets(window);
+			if (currentEnemy->WasHit()) {
+				currentEnemy->setTexture(TextureManager::GetTexture("red" + currentEnemy->GetType()));
 			}
 
-			window.draw(currentEnemy);
+			window.draw(*currentEnemy);
 		}
 
 		//draw wave
@@ -262,19 +326,19 @@ void Game::DrawGamePlay(sf::RenderWindow& window) {
 
 
 
-//right now you are making it so the enemies do different stuff per wave. Already have wave 1 and 2 covered. Have to make it 
-//so it respawns at different times and shoots more quickly if not killed (then have them have differing healths.
-
-//starting at wave 3, you make them shoot faster.
- 
-
-// need to make it so time before an enemy appears when every wave starts is different. 
-//need to kill enemy before wave can officially end. (even if rocks end)
-//also make it so you reset asteroids after gameover. and after  each wave.
-//at end change timeBeforeFirstEnemy (in enemyManager) to 5 seconds. Using 2 rn so its a bit easier to work with
 
 
-//have wave number affect how enemies work
-//make it so the wave is timed and they increment after desginated time and have a rest period in between waves. S
-//when incrementing wave, you have to rechange the enemy interval to timeBeforeFirstEnemy;
-//(do incrementing last so you can hardcode each wave and see how each works individually)
+	
+	//overload the IncreaseHealth function for all 3 enemy types
+		//in each of these you gotta pass in the wave too (if you want it to increase differently for each wave)
+		//or you could just make them increase by 2-3 shots each time  (which might as well do that)
+		//then just test everything again at each wave
+			//make the wave times shorter in wave class so can test easily. or just set a wave so can test it specifically
+
+
+	//After this, go through entire full length game with each enemy seperately (hardcode so only get one enemy)
+	//then turn and back to random and retest
+
+	//After this, you do fullscreen, score, then allow rocket to be killed then you done
+
+

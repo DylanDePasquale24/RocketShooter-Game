@@ -16,5 +16,6 @@ public:
 	void UpdatePositions();
 	void CreateAsteroid(Wave& wave);
 	void Draw(sf::RenderWindow& window);
+	void Reset();
 };
 
