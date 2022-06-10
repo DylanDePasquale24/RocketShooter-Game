@@ -11,6 +11,7 @@
 #include "BulletManagers.h"
 #include "Asteroids.h"
 #include "Wave.h"
+#include "Score.h"
 using std::vector;
 using std::cout;
 using std::unordered_map;
@@ -29,13 +30,17 @@ class Game
 	EnemyManager enemyManager;
 	Asteroids asteroids;
 	Wave wave;
+	Score score;
+	
 
 	bool gameOver;
 	bool hasStarted;
 	bool hasInteracted;
+	bool onInfoScreen;
 	bool hasEnemy;
 	bool pausedAsteroids;
 	bool startedWaveBreak;
+	bool addedEnemyScore;
 
 	int timeForNextAsteroid;
 	int enemyInterval;
@@ -45,18 +50,16 @@ public:
 
 	Game();
 
-	//main functions
+	
 	void Initialize();
 	void Update();
 	void Reset();
 	void Draw(sf::RenderWindow& window);
 
-	//Mutators
 	void PressSpaceKey();
 	void CheckButtonClicksAt(sf::Vector2f mousePos);
 	void SetToInteracted();
-
-	//Accessors
+	
 	bool GameOver();
 	bool HasStarted();
 	bool HasInteracted();
@@ -70,12 +73,16 @@ private:
 	void ControlRocket();
 	void CheckIfRocketKilled();
 
+	//updates
 	void UpdateEnemy();
 	void AdjustShotFrequency();
 	void UpdateAsteroids();
+	void UpdateWave();
 	void IncrementWave();
+	void UpdateScore();
 
 	void DrawHomeScreen(sf::RenderWindow& window);
+	void DrawInfoScreen(sf::RenderWindow& window);
 	void DrawGameOverScreen(sf::RenderWindow& window);
 	void DrawGamePlay(sf::RenderWindow& window);
 };

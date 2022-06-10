@@ -1,28 +1,24 @@
 #include "Time.h"
 
 //declare static variables
- Timer Time::gameStart;
- Timer Time::gameEnd;
- Timer Time::noEnemyStart;
- Timer Time::shotFreqStart;
- Timer Time::noBulletStart;
- Timer Time::wasHitStart;
- Timer Time::noAsteroidStart;
- Timer Time::waveStart;
- Timer Time::waveBreakStart;
+Timer Time::scoreStart;
+Timer Time::noEnemyStart;
+Timer Time::shotFreqStart;
+Timer Time::noBulletStart;
+Timer Time::wasHitStart;
+Timer Time::noAsteroidStart;
+Timer Time::waveStart;
+Timer Time::waveBreakStart;
 
 
- void Time::StartGameClock() {
-	 gameStart = high_resolution_clock::now();
- }
- void Time::EndGameClock() {
-	 gameEnd = high_resolution_clock::now();
- }
- int Time::GameRunTime() {
-
-	 auto duration = duration_cast<seconds>(gameEnd - gameStart);
-	 return duration.count();
- }
+void Time::StartScoreInterval() {
+	scoreStart = high_resolution_clock::now();
+}
+int Time::SinceLastScoreUpdate() {
+	auto currentTime = high_resolution_clock::now();
+	auto duration = duration_cast<milliseconds>(currentTime - scoreStart);
+	return duration.count();
+}
 
  void Time::StartNoEnemyClock() {
 	 noEnemyStart = high_resolution_clock::now();

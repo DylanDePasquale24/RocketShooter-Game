@@ -19,11 +19,12 @@ Enemy::Enemy() {
 void Enemy::DecrementHpBy(int amt) {
 	currentHealth -= amt;
 }
-void Enemy::IncreaseHealth() {
-	totalHealth += 50;
-}
+
 int Enemy::GetCurrentHealth() {
 	return currentHealth;
+}
+int Enemy::GetTotalHealth() {
+	return totalHealth;
 }
 void Enemy::SetShootsFaster() {
 	shootsFasterOverTime = true;
@@ -110,6 +111,9 @@ void Enemy::Repurpose() {
 void Enemy::IncrementShotFrequency() {
 
 }
+void Enemy::IncreaseHealth(Wave& wave) {
+	totalHealth += 50;
+}
 void Enemy::SetShotFrequency() {
 	minTimeBtwnShots = 1;
 	maxTimeBtwnShots = 5;
@@ -134,13 +138,22 @@ void Alien::Reset() {
 
 	//just the things you want to reset when start wave 1 again. Everything except the health and shooting frequency will be taken care of in repurpose
 	SetShotFrequency();
-	totalHealth = 50;
+	totalHealth = 50; 
 	shootsFasterOverTime = false;
 }
 void Alien::IncrementShotFrequency() {
 
 	if (maxTimeBtwnShots > 3) {
 		maxTimeBtwnShots--;
+	}
+}
+void Alien::IncreaseHealth(Wave& wave) {
+
+	if (wave.GetWave() == 4) {
+		totalHealth = 150;    //3 shots
+	}
+	else if (wave.GetWave() == 5) {
+		totalHealth = 350;   //7 shots
 	}
 }
 
@@ -175,10 +188,20 @@ void UFO::IncrementShotFrequency() {
 	if (minTimeBtwnShots > 1) {
 		minTimeBtwnShots--;
 		maxTimeBtwnShots--;
+		return;
 	}
 
 	if (maxTimeBtwnShots > 3) {
 		maxTimeBtwnShots--;
+	}
+}
+void UFO::IncreaseHealth(Wave& wave) {
+	
+	if (wave.GetWave() == 4) {
+		totalHealth = 250;     //5 shots
+	}
+	else if (wave.GetWave() == 5) {
+		totalHealth = 450;     // 9 shots
 	}
 }
 
@@ -217,6 +240,15 @@ void BattleShip::IncrementShotFrequency() {
 		maxTimeBtwnShots--;
 	}
 	
+}
+void BattleShip::IncreaseHealth(Wave& wave) {
+	
+	if (wave.GetWave() == 4) {
+		totalHealth = 350;   //7 shots
+	}
+	else if (wave.GetWave() == 5) {
+		totalHealth = 550;    //11 shots
+	}
 }
 
 void BattleShip::SetShotFrequency() {

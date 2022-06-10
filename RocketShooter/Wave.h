@@ -16,6 +16,7 @@ public:
 
 	void Increment();
 	void Reset();
+	void DrawOnEndScreen(sf::RenderWindow& window);
 
 	int GetWave();
 	int GetScaleOption(); //for the current wave

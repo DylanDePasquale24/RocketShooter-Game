@@ -4,6 +4,7 @@
 #include "Enemys.h"
 #include "Random.h"
 #include "TextureManager.h"
+#include "Wave.h"
 using std::cout;
 using std::vector;
 
@@ -14,7 +15,7 @@ class EnemyManager
 
 	const int shootFasterIntervalW3 = 3;  //wave 3
 	const int shootFasterIntervalW4 = 5;  //wave 4
-	const int shootFasterIntervalW5 = 7;  //wave 5
+	const int shootFasterIntervalW5 = 6;  //wave 5
 
 
 public:
@@ -27,7 +28,7 @@ public:
 	void Reset(); 
 
 	void EnemiesShootFaster();
-	void IncreaseEnemyHealths();
+	void IncreaseEnemyHealths(Wave& wave);
 
 	int GetTimeBeforeFirstEnemy();
 	int GetShootFasterInterval(int wave);

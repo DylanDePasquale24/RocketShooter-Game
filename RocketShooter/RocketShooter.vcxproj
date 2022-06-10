@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Rocket.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Wave.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Rocket.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Wave.h" />

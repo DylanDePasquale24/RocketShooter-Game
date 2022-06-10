@@ -4,9 +4,11 @@ Game::Game() : HEIGHT(675), WIDTH(1200) {
 	gameOver = false;
 	hasStarted = false;
 	hasInteracted = false;
+	onInfoScreen = false;
 	hasEnemy = false;
 	pausedAsteroids = false;
 	startedWaveBreak = false;
+	addedEnemyScore = false;
 	timeForNextAsteroid = 2000; //milliseconds
 	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy(); //seconds
 }
@@ -25,35 +27,11 @@ void Game::Update() {
 		CheckIfRocketKilled();
 		friendlyBullets.UpdatePositions();
 
-
 		UpdateAsteroids();
 		UpdateEnemy();
-		
-		if (wave.HasEnded()) {
-
-			if (hasEnemy) {   //stop asteroids, but need to kill enemy first
-				pausedAsteroids = true;
-				
-			}
-			else if(!hasEnemy) {
-
-				if (!startedWaveBreak) {
-					Time::StartWaveBreakClock();
-					startedWaveBreak = true;
-					pausedAsteroids = true;
-				}
-				
-				//if break if over, you finally increment wave and unpause asteroids
-				if (Time::SinceWaveBreak() >= wave.GetWaveBreak()) {
-					IncrementWave();
-					pausedAsteroids = false;
-					startedWaveBreak = false;
-				}
-			}
-		}
+		UpdateWave();
+		UpdateScore();	
 	}
-
-	//after the last enemy is killed, it spawns another one for some reason. 
 }
 void Game::Reset() {
 
@@ -62,6 +40,7 @@ void Game::Reset() {
 	hasInteracted = false;
 	hasEnemy = false;
 	startedWaveBreak = false;
+	addedEnemyScore = false;
 
 	timeForNextAsteroid = 2000;  
 	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy();
@@ -70,13 +49,20 @@ void Game::Reset() {
 
 	enemyManager.Reset();
 	wave.Reset();
+	score.Reset();
 	friendlyBullets.Reset(); 
 	asteroids.Reset();
 }
 void Game::Draw(sf::RenderWindow& window) {
 
 	if (!hasStarted) { 
-		DrawHomeScreen(window);
+
+		if (onInfoScreen) {
+			DrawInfoScreen(window);
+		}
+		else {
+			DrawHomeScreen(window);
+		}
 	}
 	else if (gameOver) {  
 		DrawGameOverScreen(window);
@@ -99,19 +85,24 @@ void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 		buttons["start"].OnClick();
 	}
 
-	//stats
-	if (buttons["stats"].WasClickedAt(mousePos)) {
-		buttons["stats"].OnClick();
+	//info
+	if (buttons["info"].WasClickedAt(mousePos)) {
+		buttons["info"].OnClick();
 	}
 
 	//continue
 	if (buttons["continue"].WasClickedAt(mousePos)) {
 		buttons["continue"].OnClick();
 	}
+
+	//back
+	if (buttons["back"].WasClickedAt(mousePos)) {
+		buttons["back"].OnClick();
+	}
 }
 void Game::SetToInteracted() {
 	hasInteracted = true;
-	Time::StartGameClock();
+	Time::StartScoreInterval();
 	Time::StartNoAsteroidClock();
 	Time::StartWaveClock();
 }
@@ -142,17 +133,20 @@ void Game::InitializeRocket() {
 }
 void Game::InitializeButtons() {
 
-	buttons.emplace("start", Button(sf::Vector2f(430, 500), "start", [this]() {
+	buttons.emplace("start", Button(sf::Vector2f(543, 500), "start", [this]() {
 
 		hasStarted = true;
 	}));
-	buttons.emplace("stats", Button(sf::Vector2f(630, 500), "stats", [this]() {
+	buttons.emplace("info", Button(sf::Vector2f(680, 508), "info", [this]() {
 
-		//do functionality
+		onInfoScreen = true;
 	}));
 	buttons.emplace("continue", Button(sf::Vector2f(475, 575), "continue", [this]() {
 		
 		Reset();
+	}));
+	buttons.emplace("back", Button(sf::Vector2f(543, 595), "back", [this]() {
+		onInfoScreen = false;
 	}));
 }
 
@@ -175,7 +169,6 @@ void Game::ControlRocket() {
 void Game::CheckIfRocketKilled() {
 	if (rocket.getPosition().y < 0 || rocket.getPosition().y > HEIGHT) {
 		gameOver = true;
-		Time::EndGameClock();
 	}
 }
 
@@ -221,13 +214,22 @@ void Game::UpdateEnemy() {
 					currentEnemy->setTexture(TextureManager::GetTexture(currentEnemy->GetType()));
 				}
 			}
-			else {
+			else { //enemy was killed
+
+				//update score (only once)
+				if (!addedEnemyScore) {
+					score.IncrementEnemy(currentEnemy, wave.GetWave());
+					addedEnemyScore = true;
+				}
+		
+
 				currentEnemy->setTexture(TextureManager::GetTexture("red" + currentEnemy->GetType()));
 				currentEnemy->move(-.1, .1);
 				currentEnemy->rotate(.25);
 
 				if (currentEnemy->getPosition().y >= 675 && !currentEnemy->HasActiveBullets()) {
 					hasEnemy = false;
+					addedEnemyScore = false;
 					Time::StartNoEnemyClock();
 				}
 			}
@@ -235,6 +237,9 @@ void Game::UpdateEnemy() {
 			currentEnemy->UpdateBullets();
 		}
 	}
+
+
+	//score increment for enemies should be in the thousands. health times 10.
 }
 void Game::AdjustShotFrequency() {
 	
@@ -256,6 +261,30 @@ void Game::UpdateAsteroids() {
 	}
 	asteroids.UpdatePositions();
 }
+void Game::UpdateWave() {
+	if (wave.HasEnded()) {
+
+		if (hasEnemy) {   //stop asteroids, but need to kill enemy first
+			pausedAsteroids = true;
+
+		}
+		else if (!hasEnemy) {
+
+			if (!startedWaveBreak) {
+				Time::StartWaveBreakClock();
+				startedWaveBreak = true;
+				pausedAsteroids = true;
+			}
+
+			//if break if over, you finally increment wave and unpause asteroids
+			if (Time::SinceWaveBreak() >= wave.GetWaveBreak()) {
+				IncrementWave();
+				pausedAsteroids = false;
+				startedWaveBreak = false;
+			}
+		}
+	}
+}
 void Game::IncrementWave() {
 
 	wave.Increment();
@@ -269,8 +298,20 @@ void Game::IncrementWave() {
 	}
 	else if (wave.GetWave() == 4 || wave.GetWave() == 5) {
 
-		enemyManager.IncreaseEnemyHealths();
+		enemyManager.IncreaseEnemyHealths(wave);
 	}
+}
+void Game::UpdateScore() {
+
+	if (!gameOver) {   
+		if (Time::SinceLastScoreUpdate() >= score.GetScoreInterval()) {
+			score.IncrementDistance();
+			Time::StartScoreInterval();
+		}
+	}
+
+	//make sure it doesn't increment during the wave break or when wave has ended and waiting for enemy to die
+	//and update for every enemy that dies (do this in update enemy)
 }
 
 void Game::DrawHomeScreen(sf::RenderWindow& window){
@@ -279,13 +320,32 @@ void Game::DrawHomeScreen(sf::RenderWindow& window){
 	window.draw(homeScreen);
 
 	window.draw(buttons["start"]);
-	window.draw(buttons["stats"]);
+	window.draw(buttons["info"]);
+}
+void Game::DrawInfoScreen(sf::RenderWindow& window) {
+
+	//draw space background
+	sf::Sprite newBackground; 
+	newBackground.setTexture(TextureManager::GetTexture("black"));
+	window.draw(newBackground);
+
+
+	//draw text
+	sf::Sprite text;
+	text.setTexture(TextureManager::GetTexture("infotxt"));
+	window.draw(text);
+
+	//draw back button
+	window.draw(buttons["back"]);
 }
 void Game::DrawGameOverScreen(sf::RenderWindow& window) {
+
 	sf::Sprite gameOverScreen;
 	gameOverScreen.setTexture(TextureManager::GetTexture("gameoverscreen"));
 	window.draw(gameOverScreen);
 
+	score.DrawOnEndScreen(window);
+	wave.DrawOnEndScreen(window);
 	window.draw(buttons["continue"]);
 }
 void Game::DrawGamePlay(sf::RenderWindow& window) {
@@ -321,24 +381,11 @@ void Game::DrawGamePlay(sf::RenderWindow& window) {
 
 		//draw wave
 		window.draw(wave);
+
+		//draw score
+		score.Draw(window);
 	}
 }
 
-
-
-
-
-	
-	//overload the IncreaseHealth function for all 3 enemy types
-		//in each of these you gotta pass in the wave too (if you want it to increase differently for each wave)
-		//or you could just make them increase by 2-3 shots each time  (which might as well do that)
-		//then just test everything again at each wave
-			//make the wave times shorter in wave class so can test easily. or just set a wave so can test it specifically
-
-
-	//After this, go through entire full length game with each enemy seperately (hardcode so only get one enemy)
-	//then turn and back to random and retest
-
-	//After this, you do fullscreen, score, then allow rocket to be killed then you done
 
 

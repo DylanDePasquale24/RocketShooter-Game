@@ -21,9 +21,6 @@ Enemy* EnemyManager::CreateEnemy() {
 	
 	int randomNum = Random::Int(0, 2);
 
-	/*testing*/
-	randomNum = 1;
-
 	enemies[randomNum]->Repurpose();
 	return enemies[randomNum];
 }
@@ -38,9 +35,9 @@ void EnemyManager::EnemiesShootFaster() {
 		enemies[i]->SetShootsFaster();
 	}
 }
-void EnemyManager::IncreaseEnemyHealths() {
+void EnemyManager::IncreaseEnemyHealths(Wave& wave) {
 	for (unsigned int i = 0; i < enemies.size(); i++) {
-		enemies[i]->IncreaseHealth();
+		enemies[i]->IncreaseHealth(wave);
 	}
 }
 

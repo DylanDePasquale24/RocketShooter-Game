@@ -2,11 +2,11 @@
 
 Wave::Wave() {
 
-	currentWave = 1;   //currently changing for tests (need it to be 1)
+	currentWave = 1; 
 
 	setTexture(TextureManager::GetTexture("wave1"));
 	TextureManager::SetOriginToCenter(*this);
-	setPosition(600, 50);
+	setPosition(1110, 30);
 }
 
 void Wave::Increment() {
@@ -20,6 +20,16 @@ void Wave::Increment() {
 void Wave::Reset() {
 	currentWave = 1;
 	setTexture(TextureManager::GetTexture("wave1"));
+	setPosition(1110, 30);
+}
+void Wave::DrawOnEndScreen(sf::RenderWindow& window) {
+
+	sf::Sprite waveNum;
+	string w = std::to_string(currentWave);
+	waveNum.setTexture(TextureManager::GetTexture(w));
+	TextureManager::SetOriginToCenter(waveNum);
+	waveNum.setPosition(225, 457);
+	window.draw(waveNum);
 }
 
 int Wave::GetWave() {
@@ -99,18 +109,18 @@ int Wave::GetWaveBreak() {
 bool Wave::HasEnded() {
 
 	if (currentWave == 1) {
-		if (Time::OfWave() >= 30) {  
+		if (Time::OfWave() >= 20) {     //20    //5 test
 			return true;
 		}
 	}
 	else if (currentWave == 2) {
-		if (Time::OfWave() >= 50) {   
+		if (Time::OfWave() >= 50) {    //50      //7 test
 			return true;
 		}
 	}
 	else if(currentWave == 3 || currentWave == 4) {
 
-		if (Time::OfWave() >= 80) {   
+		if (Time::OfWave() >= 80) {   //80     //20 test
 			return true;
 		}
 	}

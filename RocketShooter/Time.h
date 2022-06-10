@@ -6,8 +6,7 @@ using Timer = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 class Time
 {
-	static Timer gameStart;
-	static Timer gameEnd;
+	static Timer scoreStart;
 
 	static Timer waveStart;
 	static Timer waveBreakStart;
@@ -20,9 +19,8 @@ class Time
 
 public:
 	
-	static void StartGameClock();
-	static void EndGameClock();
-	static int GameRunTime();
+	static void StartScoreInterval();
+	static int SinceLastScoreUpdate();
 
 	static void StartNoEnemyClock();
 	static int WithNoEnemy();

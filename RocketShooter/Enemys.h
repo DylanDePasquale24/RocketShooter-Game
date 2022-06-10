@@ -8,6 +8,7 @@
 #include "Random.h"
 #include "Time.h"
 #include "BulletManagers.h"
+#include "Wave.h"
 using std::string;
 using std::vector;
 
@@ -41,8 +42,8 @@ public:
 	Enemy();
  
 	void DecrementHpBy(int amt);
-	void IncreaseHealth();
 	int GetCurrentHealth();
+	int GetTotalHealth();
 	void SetShootsFaster();
 	bool GetShootsFaster();
 
@@ -63,6 +64,7 @@ public:
 	virtual void Reset();
 	virtual void Repurpose();
 	virtual void IncrementShotFrequency();   //overload for each one
+	virtual void IncreaseHealth(Wave& wave);
 	virtual void SetShotFrequency();
 };
 
@@ -74,6 +76,7 @@ struct Alien : public Enemy{
 	Alien();
 	void Reset();
 	void IncrementShotFrequency();
+	void IncreaseHealth(Wave& wave);
 
 	void SetShotFrequency();
 
@@ -84,6 +87,7 @@ struct UFO : public Enemy {
 	UFO();
 	void Reset();
 	void IncrementShotFrequency();
+	void IncreaseHealth(Wave& wave);
 
 	void SetShotFrequency();
 
@@ -94,6 +98,7 @@ struct BattleShip : public Enemy {
 	BattleShip();
 	void Reset();
 	void IncrementShotFrequency();
+	void IncreaseHealth(Wave& wave);
 
 	void SetShotFrequency();
 };
