@@ -66,8 +66,12 @@ void Enemy::DrawBullets(sf::RenderWindow& window) {
 bool Enemy::HasActiveBullets() {
 	return bullets.HasActiveBullet();
 }
+EnemyBulletManager& Enemy::ReturnBullets() {
+	return bullets;
+}
 
-bool Enemy::WasDamagedBy(RocketBulletManager rocketBullets) {
+
+bool Enemy::WasDamagedBy(RocketBulletManager& rocketBullets) {
 
 	if (rocketBullets.HasBulletAt(getGlobalBounds())) {
 		return true;

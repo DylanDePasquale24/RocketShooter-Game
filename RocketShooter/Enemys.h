@@ -52,8 +52,9 @@ public:
 	void UpdateBullets();
 	void DrawBullets(sf::RenderWindow& window);
 	bool HasActiveBullets();
+	EnemyBulletManager& ReturnBullets();
 
-	bool WasDamagedBy(RocketBulletManager rocketBullets);
+	bool WasDamagedBy(RocketBulletManager& rocketBullets);
 	bool WasHit();
 	bool WasKilled();
 	void SetWasHit(bool val);

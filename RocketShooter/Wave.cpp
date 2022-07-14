@@ -74,7 +74,7 @@ int Wave::GetMaxAsteroidTime() {
 		return 500;
 	}
 	else {
-		return 750;
+		return 700;
 	}
 }
 int Wave::GetEnemyInterval() {

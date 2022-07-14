@@ -81,7 +81,7 @@ void Game::PressSpaceKey() {
 void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 
 	//start
-	if (buttons["start"].WasClickedAt(mousePos)) {
+	if (buttons["start"].WasClickedAt(mousePos) && !onInfoScreen) {
 		buttons["start"].OnClick();
 	}
 
@@ -167,9 +167,22 @@ void Game::ControlRocket() {
 	}
 }
 void Game::CheckIfRocketKilled() {
+
+	//hit edge
 	if (rocket.getPosition().y < 0 || rocket.getPosition().y > HEIGHT) {
 		gameOver = true;
 	}
+
+	//hit by enemy bullet
+	if (hasEnemy && rocket.WasHitBy(currentEnemy->ReturnBullets())) {
+		gameOver = true;
+	}
+
+	//hit by asteroid
+	if (rocket.WasHitBy(asteroids.ReturnAsteroidsVec())) {
+		cout << "asteroid killed" << endl;
+	}
+
 }
 
 void Game::UpdateEnemy() {

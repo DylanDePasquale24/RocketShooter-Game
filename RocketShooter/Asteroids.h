@@ -12,6 +12,7 @@ class Asteroids
 
 public:
 	Asteroids();
+	vector<Asteroid>& ReturnAsteroidsVec();
 
 	void UpdatePositions();
 	void CreateAsteroid(Wave& wave);

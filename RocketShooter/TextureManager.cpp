@@ -16,6 +16,13 @@ sf::Texture& TextureManager::GetTexture(string textureName) {
 
 	return textures[textureName];
 }
+sf::Texture* TextureManager::GetTexturePtr(string textureName) {
+	if (textures.find(textureName) == textures.end()) {
+		LoadTexture(textureName);
+	}
+
+	return &textures[textureName];
+}
 void TextureManager::Clear() {
 	textures.clear();    
 }

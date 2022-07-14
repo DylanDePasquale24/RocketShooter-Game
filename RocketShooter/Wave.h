@@ -9,7 +9,7 @@ using std::string;
 class Wave : public sf::Sprite
 {
 	int currentWave;
-	const int waveBreak = 3;
+	const int waveBreak = 2;
 
 public:
 	Wave();

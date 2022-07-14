@@ -3,6 +3,9 @@
 Asteroids::Asteroids() {
 	
 }
+vector<Asteroid>& Asteroids::ReturnAsteroidsVec() {
+	return astroidVec;
+}
 
 void Asteroids::UpdatePositions() {
 	for (unsigned int i = 0; i < astroidVec.size(); i++) {

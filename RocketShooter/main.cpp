@@ -61,31 +61,13 @@ int main()
 
 
 //TO DO:
-//fix stats button and make it rules (information)
-//Every time a new wave is added, make it appear in middle very large (during break)
-   
 
     //make it so rocket can be killed by enemy bullets and all asteroids
-        //do an animation for rocket dying(turn red for one second)  **OPTIONAL**
         //make sure the asteroids are circular and don't kill the rocket if it doesnt fully contact it.. NO WHITE SPACE
 
+
     // check for memory leaks and see cpu usage. Try to make performance adjustments. 
-    //need to add a bunch of stuff to the reset (like timebtwn Asteroids and enemy bullets, etc.
-
-
-
-
-
 
 //Fix up speed of rocket falling. Make it slow at first and then increase in speed, not just linear. Kinda make it like flappy bird
-//allow rocket to be killed last because you want to figure out game balancing before you can be killed
-    //add the side walls and be able to be killed by them
-    //add animation when your ship dies for a few seconds. 
-    //make it so you can be hit by bullets (have some 2 second animation before game over screen)
 
-
-
-
-
-//seperate all your inheritance classes into seperate files, instead of just one
 //TEST YOUR PROGRAM IN THE COMMAND LINE WITH COMMAND LINE COMPILING. 

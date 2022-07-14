@@ -2,17 +2,19 @@
 
 Asteroid::Asteroid(){}
 Asteroid::Asteroid(int scaleOption) {
-
+	
+	setRadius(83);
+	setPointCount(10);
 	scale = CalculateScale(scaleOption);
 	velocity = sf::Vector2f(-.2, 0);
 	isActive = true;
 
-	setTexture(TextureManager::GetTexture("asteroid"));
-	TextureManager::SetOriginToCenter(*this);
+	setTexture(TextureManager::GetTexturePtr("asteroid"));
+	setOrigin(getRadius(),getRadius());
+
+
 	setScale(scale * .5, scale * .5);
-
-
-	setPosition(1500, Random::Int(50,625));  //fix
+	setPosition(1500, Random::Int(50,625));  
 }
 void Asteroid::Repurpose(int scaleOption) {
 	scale = CalculateScale(scaleOption);
@@ -58,6 +60,10 @@ int Asteroid::CalculateScale(int scaleOption) {
 		return 3;                 //just large rocks
 		break;
 	default:
-		return -1;
+		return 2;
 	}
 }
+
+
+//to check if its being hit, see if the rocket intersects with any point that is from the origin and the radius of the circle, 
+//but be careful of the scale

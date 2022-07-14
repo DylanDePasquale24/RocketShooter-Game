@@ -3,7 +3,7 @@
 #include "TextureManager.h"
 #include "Random.h"
 
-class Asteroid : public sf::Sprite
+class Asteroid : public sf::CircleShape
 {
 	sf::Vector2f velocity;
 	float scale;
@@ -25,3 +25,5 @@ private:
 	
 };
 
+//will need to change the asteroid constructor and repurpose functions
+//bc now dealing with a shape and not a sprite

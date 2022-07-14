@@ -14,6 +14,8 @@ class TextureManager
 public:
 	static void SetOriginToCenter(sf::Sprite& sprite);
 	static sf::Texture& GetTexture(string textureName);
+
+	static sf::Texture* GetTexturePtr(string textureName);
 	static void Clear(); 
 
 
