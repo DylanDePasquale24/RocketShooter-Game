@@ -109,7 +109,7 @@ int Wave::GetWaveBreak() {
 bool Wave::HasEnded() {
 
 	if (currentWave == 1) {
-		if (Time::OfWave() >= 5) {     //20    //5 test
+		if (Time::OfWave() >= 20) {     //20    //5 test
 			return true;
 		}
 	}
