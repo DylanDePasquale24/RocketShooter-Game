@@ -57,17 +57,3 @@ int main()
     TextureManager::Clear();
     return 0;
 }
-
-
-
-//TO DO:
-
-    //make it so rocket can be killed by enemy bullets and all asteroids
-        //make sure the asteroids are circular and don't kill the rocket if it doesnt fully contact it.. NO WHITE SPACE
-
-
-    // check for memory leaks and see cpu usage. Try to make performance adjustments. 
-
-//Fix up speed of rocket falling. Make it slow at first and then increase in speed, not just linear. Kinda make it like flappy bird
-
-//TEST YOUR PROGRAM IN THE COMMAND LINE WITH COMMAND LINE COMPILING. 

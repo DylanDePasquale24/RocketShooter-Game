@@ -31,5 +31,5 @@ void TextureManager::LoadTexture(string filename) {
 	string path = "Images/";
 	path += filename + ".png";
 
-	textures[filename].loadFromFile(path);  
+	textures[filename].loadFromFile(path);
 }

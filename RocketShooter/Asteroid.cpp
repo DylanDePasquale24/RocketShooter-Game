@@ -3,7 +3,7 @@
 Asteroid::Asteroid(){}
 Asteroid::Asteroid(int scaleOption) {
 	
-	setRadius(83);
+	setRadius(77);
 	setPointCount(10);
 	scale = CalculateScale(scaleOption);
 	velocity = sf::Vector2f(-.2, 0);
@@ -41,8 +41,35 @@ bool Asteroid::HitEdge() {
 	return false;
 }
 
+bool Asteroid::ContainsRocketRect(sf::FloatRect rect) {
+
+	//check all 4 corners of rectangle and see if the circle contains any of those points
+
+	sf::Vector2f topLeft(rect.left, rect.top);
+	sf::Vector2f topRight(rect.left + rect.width, rect.top);
+	sf::Vector2f bottomLeft(rect.left, rect.top + rect.height);
+	sf::Vector2f bottomRight(rect.left + rect.width, rect.top + rect.height);
+
+	return ContainsPoint(topLeft) || ContainsPoint(topRight) || ContainsPoint(bottomLeft) || ContainsPoint(bottomRight);
+}
+
+
 
 /*PRIVATE*/
+bool Asteroid::ContainsPoint(sf::Vector2f point) {
+
+	sf::Vector2f center = getPosition();
+	float x = point.x - center.x;
+	float y = point.y - center.y;
+
+	x *= x;
+	y *= y;
+
+	float curRadius = getRadius() * scale * 0.5;
+
+	float r = curRadius * curRadius;
+	return ((x + y) < r);
+}
 int Asteroid::CalculateScale(int scaleOption) {
 
 	switch (scaleOption) {
@@ -63,7 +90,3 @@ int Asteroid::CalculateScale(int scaleOption) {
 		return 2;
 	}
 }
-
-
-//to check if its being hit, see if the rocket intersects with any point that is from the origin and the radius of the circle, 
-//but be careful of the scale

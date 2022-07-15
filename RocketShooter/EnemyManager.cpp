@@ -20,7 +20,6 @@ void EnemyManager::InitializeEnemyTypes() {
 Enemy* EnemyManager::CreateEnemy() {
 	
 	int randomNum = Random::Int(0, 2);
-
 	enemies[randomNum]->Repurpose();
 	return enemies[randomNum];
 }

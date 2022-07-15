@@ -12,7 +12,8 @@ bool Rocket::WasHitBy(vector<Asteroid>& asteroids) {
 	//iterate through all the asteroids and see if they intersect with rocket
 
 	for (unsigned int i = 0; i < asteroids.size(); i++) {
-		if (asteroids[i].IsActive() && asteroids[i].getGlobalBounds().intersects(getGlobalBounds())) {
+
+		if (asteroids[i].IsActive() && asteroids[i].ContainsRocketRect(getGlobalBounds())) {
 			return true;
 		}
 	}

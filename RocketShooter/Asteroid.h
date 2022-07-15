@@ -20,10 +20,10 @@ public:
 	sf::Vector2f GetVelocity();
 	bool HitEdge();
 
-private:
-	int CalculateScale(int scaleOption);
-	
-};
+	bool ContainsRocketRect(sf::FloatRect rect);
 
-//will need to change the asteroid constructor and repurpose functions
-//bc now dealing with a shape and not a sprite
+private:
+
+	bool ContainsPoint(sf::Vector2f point);
+	int CalculateScale(int scaleOption);
+};

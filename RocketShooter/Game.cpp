@@ -180,9 +180,8 @@ void Game::CheckIfRocketKilled() {
 
 	//hit by asteroid
 	if (rocket.WasHitBy(asteroids.ReturnAsteroidsVec())) {
-		cout << "asteroid killed" << endl;
+		gameOver = true;
 	}
-
 }
 
 void Game::UpdateEnemy() {
