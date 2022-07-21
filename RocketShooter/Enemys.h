@@ -6,7 +6,7 @@
 #include "Random.h"
 #include "TextureManager.h"
 #include "Random.h"
-#include "Time.h"
+#include "Timing.h"
 #include "BulletManagers.h"
 #include "Wave.h"
 using std::string;

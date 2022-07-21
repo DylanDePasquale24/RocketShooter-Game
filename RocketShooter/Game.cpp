@@ -102,9 +102,9 @@ void Game::CheckButtonClicksAt(sf::Vector2f mousePos) {
 }
 void Game::SetToInteracted() {
 	hasInteracted = true;
-	Time::StartScoreInterval();
-	Time::StartNoAsteroidClock();
-	Time::StartWaveClock();
+	Timing::StartScoreInterval();
+	Timing::StartNoAsteroidClock();
+	Timing::StartWaveClock();
 }
 
 bool Game::GameOver() {
@@ -153,8 +153,8 @@ void Game::InitializeButtons() {
 void Game::ControlRocket() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
-		rocket.move(-rocket.GetFallVelocity());
-
+		rocket.move(-rocket.GetFallVelocity() * (Timing::GetLastFrame() / NORMALIZE_FRAME_TIME));
+		
 		//upon first movement
 		if (hasInteracted == false) {
 			SetToInteracted();
@@ -163,7 +163,7 @@ void Game::ControlRocket() {
 	}
 	else if(hasInteracted) {
 
-		rocket.move(rocket.GetFallVelocity());
+		rocket.move(rocket.GetFallVelocity() * (Timing::GetLastFrame() / NORMALIZE_FRAME_TIME));
 	}
 }
 void Game::CheckIfRocketKilled() {
@@ -191,11 +191,11 @@ void Game::UpdateEnemy() {
 
 		if (!hasEnemy) {
 
-			if (Time::WithNoEnemy() >= enemyInterval) {  //starting interval of 5 secs (for first enemy of evry wave)
+			if (Timing::WithNoEnemy() >= enemyInterval) {  //starting interval of 5 secs (for first enemy of evry wave)
 				currentEnemy = enemyManager.CreateEnemy();
 				enemyInterval = wave.GetEnemyInterval();     //changes to interval of the current wave
 				hasEnemy = true;
-				Time::StartShotFreqClock();
+				Timing::StartShotFreqClock();
 			}
 		}
 		else { //IF THERE IS AN ENEMY
@@ -212,7 +212,7 @@ void Game::UpdateEnemy() {
 				currentEnemy->Shoot();
 
 				if (currentEnemy->WasDamagedBy(friendlyBullets)) {
-					Time::StartWasHitClock();
+					Timing::StartWasHitClock();
 					currentEnemy->SetWasHit(true);
 					currentEnemy->DecrementHpBy(friendlyBullets.damage);
 
@@ -221,7 +221,7 @@ void Game::UpdateEnemy() {
 					}
 				}
 
-				if (currentEnemy->WasHit() && Time::SinceHit() >= 75) {
+				if (currentEnemy->WasHit() && Timing::SinceHit() >= 75) {
 					currentEnemy->SetWasHit(false);
 					currentEnemy->setTexture(TextureManager::GetTexture(currentEnemy->GetType()));
 				}
@@ -242,7 +242,7 @@ void Game::UpdateEnemy() {
 				if (currentEnemy->getPosition().y >= 675 && !currentEnemy->HasActiveBullets()) {
 					hasEnemy = false;
 					addedEnemyScore = false;
-					Time::StartNoEnemyClock();
+					Timing::StartNoEnemyClock();
 				}
 			}
 
@@ -255,17 +255,17 @@ void Game::UpdateEnemy() {
 }
 void Game::AdjustShotFrequency() {
 	
-	if (Time::SinceLastShotFreqChange() >= enemyManager.GetShootFasterInterval(wave.GetWave())) {
+	if (Timing::SinceLastShotFreqChange() >= enemyManager.GetShootFasterInterval(wave.GetWave())) {
 		currentEnemy->IncrementShotFrequency();
-		Time::StartShotFreqClock();  //bc it was just changed
+		Timing::StartShotFreqClock();  //bc it was just changed
 	}
 }
 void Game::UpdateAsteroids() {
 
 	if (!pausedAsteroids) {
-		if (Time::WithNoAsteroid() >= timeForNextAsteroid) {
+		if (Timing::WithNoAsteroid() >= timeForNextAsteroid) {
 			asteroids.CreateAsteroid(wave);
-			Time::StartNoAsteroidClock();
+			Timing::StartNoAsteroidClock();
 
 			//if you increment, then you set the time to be greater!
 			timeForNextAsteroid = Random::Int(500, wave.GetMaxAsteroidTime());
@@ -283,13 +283,13 @@ void Game::UpdateWave() {
 		else if (!hasEnemy) {
 
 			if (!startedWaveBreak) {
-				Time::StartWaveBreakClock();
+				Timing::StartWaveBreakClock();
 				startedWaveBreak = true;
 				pausedAsteroids = true;
 			}
 
 			//if break if over, you finally increment wave and unpause asteroids
-			if (Time::SinceWaveBreak() >= wave.GetWaveBreak()) {
+			if (Timing::SinceWaveBreak() >= wave.GetWaveBreak()) {
 				IncrementWave();
 				pausedAsteroids = false;
 				startedWaveBreak = false;
@@ -300,8 +300,8 @@ void Game::UpdateWave() {
 void Game::IncrementWave() {
 
 	wave.Increment();
-	Time::StartWaveClock(); 
-	Time::StartNoEnemyClock();
+	Timing::StartWaveClock(); 
+	Timing::StartNoEnemyClock();
 	enemyInterval = enemyManager.GetTimeBeforeFirstEnemy();
 
 	if (wave.GetWave() == 3) {
@@ -316,9 +316,9 @@ void Game::IncrementWave() {
 void Game::UpdateScore() {
 
 	if (!gameOver) {   
-		if (Time::SinceLastScoreUpdate() >= score.GetScoreInterval()) {
+		if (Timing::SinceLastScoreUpdate() >= score.GetScoreInterval()) {
 			score.IncrementDistance();
-			Time::StartScoreInterval();
+			Timing::StartScoreInterval();
 		}
 	}
 

@@ -158,7 +158,7 @@
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Timing.cpp" />
     <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +174,7 @@
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Time.h" />
+    <ClInclude Include="Timing.h" />
     <ClInclude Include="Wave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

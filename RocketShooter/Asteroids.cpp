@@ -11,8 +11,8 @@ void Asteroids::UpdatePositions() {
 	for (unsigned int i = 0; i < astroidVec.size(); i++) {
 
 		if (astroidVec[i].IsActive()) {
-			astroidVec[i].move(astroidVec[i].GetVelocity());
-			astroidVec[i].rotate(.01);
+			astroidVec[i].move(astroidVec[i].GetVelocity() * (Timing::GetLastFrame() / .00041f));
+			astroidVec[i].rotate(.01 * (Timing::GetLastFrame() / .00041f));
 
 			if (astroidVec[i].HitEdge()) {
 				astroidVec[i].SetActiveStatus(false);   //deactivate
@@ -21,9 +21,6 @@ void Asteroids::UpdatePositions() {
 	}
 }
 void Asteroids::CreateAsteroid(Wave& wave) {
-
-
-	//the wave is for the size
 	
 	//try repurpose
 	for (unsigned int i = 0; i < astroidVec.size(); i++) {

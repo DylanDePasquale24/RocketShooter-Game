@@ -1,24 +1,24 @@
 #pragma once
-#include <chrono>
-using namespace std::chrono;
+#include <SFML/Graphics.hpp>
 
-using Timer = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
-class Time
+class Timing
 {
-	static Timer scoreStart;
+	static sf::Clock score;
 
-	static Timer waveStart;
-	static Timer waveBreakStart;
+	static sf::Clock wave;
+	static sf::Clock waveBreak;
 
-	static Timer noEnemyStart;  
-	static Timer shotFreqStart;
-	static Timer noBulletStart;
-	static Timer wasHitStart;
-	static Timer noAsteroidStart;
+	static sf::Clock noEnemy;
+	static sf::Clock shotFreq;
+	static sf::Clock noBullet;
+	static sf::Clock wasHit;
+	static sf::Clock noAsteroid;
+
+	static sf::Clock frame;
+	static float lastFrame;
 
 public:
-	
 	static void StartScoreInterval();
 	static int SinceLastScoreUpdate();
 
@@ -43,5 +43,9 @@ public:
 	static void StartWaveBreakClock();
 	static int SinceWaveBreak();
 
+	static void StartFrame();
+	static void UpdateLastFrame();
+	static float GetLastFrame();
+	/*static float FrameTime();*/
 };
 

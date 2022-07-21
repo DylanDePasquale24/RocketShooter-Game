@@ -109,18 +109,18 @@ int Wave::GetWaveBreak() {
 bool Wave::HasEnded() {
 
 	if (currentWave == 1) {
-		if (Time::OfWave() >= 20) {     //20    //5 test
+		if (Timing::OfWave() >= 20) {     //20    //5 test
 			return true;
 		}
 	}
 	else if (currentWave == 2) {
-		if (Time::OfWave() >= 50) {    //50      //7 test
+		if (Timing::OfWave() >= 50) {    //50      //7 test
 			return true;
 		}
 	}
 	else if(currentWave == 3 || currentWave == 4) {
 
-		if (Time::OfWave() >= 80) {   //80     //20 test
+		if (Timing::OfWave() >= 80) {   //80     //20 test
 			return true;
 		}
 	}

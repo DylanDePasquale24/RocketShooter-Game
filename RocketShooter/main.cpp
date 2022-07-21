@@ -3,7 +3,9 @@
 #include "Game.h"
 
 using namespace sf;
-using namespace std;
+using namespace std; 
+
+
 
 int main()
 {
@@ -11,7 +13,8 @@ int main()
     game.Initialize();
 
     RenderWindow window(VideoMode(1200, 675), "Rocket Shooter", Style::Titlebar | Style::Close);
-  
+   
+    Timing::StartFrame();
 
     while (window.isOpen()){
 
@@ -50,7 +53,9 @@ int main()
         
         window.clear();
         game.Draw(window);
-        window.display();
+        window.display();   
+        Timing::UpdateLastFrame();
+        Timing::StartFrame();
     }
 
 

@@ -39,7 +39,7 @@
     <ClCompile Include="EnemyManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
+    <ClCompile Include="Timing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BulletManagers.cpp">
@@ -83,7 +83,7 @@
     <ClInclude Include="EnemyManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
+    <ClInclude Include="Timing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BulletManagers.h">

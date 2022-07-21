@@ -35,7 +35,7 @@ bool Enemy::GetShootsFaster() {
 
 void Enemy::UpdatePosition() {
 
-	move(0, speed);
+	move(0, speed * (Timing::GetLastFrame() / .00041f));
 	if (getPosition().y >= maxY || getPosition().y <= minY) {
 		speed *= -1;  //reverse direction
 	}
@@ -43,10 +43,10 @@ void Enemy::UpdatePosition() {
 void Enemy::Shoot() {
 
 	if (!bulletClockStarted) {
-		Time::StartNoBulletClock();
+		Timing::StartNoBulletClock();
 		bulletClockStarted = true;
 	}
-	else if (Time::WithNoBullet() >= timeBtwnShots) {  //SHOOT
+	else if (Timing::WithNoBullet() >= timeBtwnShots) {  //SHOOT
 
 		int width = getGlobalBounds().width;
 		bullets.Shoot(sf::Vector2f(getPosition().x - width, getPosition().y));

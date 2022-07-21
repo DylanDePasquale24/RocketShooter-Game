@@ -10,7 +10,7 @@ void BulletManager::UpdatePositions() {
 		Bullet* currentBullet = bullets[i];
 
 		if (currentBullet->IsActive()) {
-			currentBullet->move(currentBullet->GetMovementVelocity());
+			currentBullet->move(currentBullet->GetMovementVelocity() * (Timing::GetLastFrame() / .00041f));
 
 			if (currentBullet->HitEdge()) {
 				currentBullet->SetActive(false);

@@ -6,7 +6,7 @@
 #include "TextureManager.h"
 #include "Rocket.h"
 #include "Button.h"
-#include "Time.h"
+#include "Timing.h"
 #include "EnemyManager.h"
 #include "BulletManagers.h"
 #include "Asteroids.h"
@@ -44,6 +44,9 @@ class Game
 
 	int timeForNextAsteroid;
 	int enemyInterval;
+
+	const float NORMALIZE_FRAME_TIME = .00041f;
+ 
 
 
 public:

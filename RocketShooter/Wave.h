@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "TextureManager.h"
-#include "Time.h"
+#include "Timing.h"
 using std::string;
 
 
